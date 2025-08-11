@@ -1,0 +1,833 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLACKDEVS QUANTUM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#111827',
+                        gold: '#facc15',
+                        teal: '#0fffc2',
+                        light: '#f1f5f9',
+                    },
+                    fontFamily: {
+                        sora: ['Sora', 'sans-serif'],
+                        manrope: ['Manrope', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            background-color: #111827;
+            color: #f1f5f9;
+            font-family: 'Manrope', sans-serif;
+            overflow-x: hidden;
+        }
+        .glass-nav {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background-color: rgba(17, 24, 39, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .section-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #facc15, #0fffc2);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at 70% 30%, rgba(15, 255, 194, 0.15), transparent 60%),
+                        radial-gradient(circle at 20% 80%, rgba(250, 204, 21, 0.1), transparent 50%);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #facc15, #facc15cc);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(250, 204, 21, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 25px rgba(250, 204, 21, 0.4);
+        }
+        .btn-secondary {
+            background: rgba(15, 255, 194, 0.1);
+            border: 1px solid #0fffc2;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(15, 255, 194, 0.15);
+        }
+        .btn-secondary:hover {
+            transform: translateY(-2px) scale(1.02);
+            background: rgba(15, 255, 194, 0.2);
+            box-shadow: 0 6px 25px rgba(15, 255, 194, 0.25);
+        }
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #facc15, #0fffc2);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 0 0 10px rgba(15, 255, 194, 0.2);
+            border-color: rgba(15, 255, 194, 0.3);
+        }
+        .product-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .product-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .product-card:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 0 0 15px rgba(250, 204, 21, 0.15);
+        }
+        .status-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        .status-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        .badge {
+            position: relative;
+            overflow: hidden;
+        }
+        .badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.6s ease;
+        }
+        .status-card:hover .badge::before {
+            left: 100%;
+        }
+        .badge-undetected {
+            background: rgba(15, 255, 194, 0.1);
+            border: 1px solid #0fffc2;
+            color: #0fffc2;
+        }
+        .badge-updating {
+            background: rgba(250, 204, 21, 0.1);
+            border: 1px solid #facc15;
+            color: #facc15;
+        }
+        .badge-detected {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+        }
+        .faq-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        .faq-item.active {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(15, 255, 194, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 15px rgba(15, 255, 194, 0.1);
+        }
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        .faq-item.active .faq-content {
+            max-height: 500px;
+        }
+        .social-icon {
+            transition: all 0.3s ease;
+        }
+        .social-icon:hover {
+            transform: translateY(-3px);
+            color: #facc15;
+        }
+        .footer-border {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #facc15, #0fffc2, transparent);
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.8s ease;
+        }
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(30px);
+            transition: all 0.8s ease;
+        }
+        .reveal-left.active, .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+        .faq-item.active .accordion-icon {
+            transform: rotate(45deg);
+        }
+        .purchase-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        .purchase-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+        }
+        .purchase-btn:hover::before {
+            left: 100%;
+        }
+    </style>
+</head>
+<body>
+   
+    <nav id="navbar" class="glass-nav fixed w-full z-50 transition-all duration-300">
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <div class="flex-1 flex justify-center md:justify-start">
+                    <a href="#hero" class="text-2xl font-bold font-sora text-gold">
+                        BLACKDEVS<span class="text-teal">QUANTUM</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="nav-link text-light hover:text-teal transition-colors">About</a>
+                    <a href="#products" class="nav-link text-light hover:text-teal transition-colors">Products</a>
+                    <a href="#status" class="nav-link text-light hover:text-teal transition-colors">Status</a>
+                    <a href="#faq" class="nav-link text-light hover:text-teal transition-colors">FAQ</a>
+                    <a href="#" class="btn-primary px-5 py-2 rounded-full text-dark font-medium">Join Discord</a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-light hover:text-teal">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+       
+        <div id="mobile-menu" class="hidden md:hidden bg-dark border-t border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="#about" class="block px-3 py-2 text-light hover:bg-gray-800 rounded-md">About</a>
+                <a href="#products" class="block px-3 py-2 text-light hover:bg-gray-800 rounded-md">Products</a>
+                <a href="#status" class="block px-3 py-2 text-light hover:bg-gray-800 rounded-md">Status</a>
+                <a href="#faq" class="block px-3 py-2 text-light hover:bg-gray-800 rounded-md">FAQ</a>
+                <a href="#" class="block px-3 py-2 text-gold hover:bg-gray-800 rounded-md">Join Discord</a>
+            </div>
+        </div>
+    </nav>
+
+    
+    <section id="hero" class="hero-gradient min-h-screen flex items-center pt-16">
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 text-center md:text-left mb-10 md:mb-0">
+                    <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold font-sora mb-4 reveal">
+                        <span class="text-light">BLACKDEVS</span>
+                        <span class="text-gold">QUANTUM</span>
+                    </h1>
+                    <p class="text-xl md:text-2xl text-light/80 mb-8 reveal" style="animation-delay: 0.2s">
+                        Rewrite the Rules. Reinvent the Tools.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4 reveal" style="animation-delay: 0.4s">
+                        <a href="#products" class="btn-primary px-8 py-3 rounded-lg text-dark font-semibold">
+                            Explore
+                        </a>
+                        <a href="#" class="btn-secondary px-8 py-3 rounded-lg text-teal font-semibold">
+                            Join Discord
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 reveal-right">
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-full max-w-lg mx-auto">
+                        <defs>
+                            <linearGradient id="heroGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#facc15" />
+                                <stop offset="100%" stop-color="#0fffc2" />
+                            </linearGradient>
+                        </defs>
+                        <path fill="url(#heroGradient)" fill-opacity="0.15" d="M40,-51.2C51.9,-41.7,61.8,-29.6,65.8,-15.6C69.8,-1.6,67.9,14.3,60.8,27.1C53.7,39.9,41.3,49.6,27.4,56.2C13.5,62.8,-1.9,66.3,-17.8,63.7C-33.7,61.1,-50.1,52.4,-59.3,38.8C-68.5,25.2,-70.5,6.7,-66.6,-9.5C-62.7,-25.7,-52.9,-39.6,-40.3,-49.1C-27.7,-58.6,-12.2,-63.7,1.2,-65.2C14.6,-66.7,28.1,-60.7,40,-51.2Z" transform="translate(100 100)" />
+                        <path fill="url(#heroGradient)" fill-opacity="0.1" d="M44.1,-57.3C56.9,-46.7,66.8,-32.5,70.2,-16.6C73.6,-0.7,70.5,16.9,62.1,31.1C53.7,45.3,40,56.1,24.4,63.1C8.8,70.1,-8.7,73.3,-24.4,68.8C-40.1,64.3,-54,52.1,-62.9,37C-71.8,21.9,-75.7,3.9,-71.9,-12.2C-68.1,-28.3,-56.6,-42.5,-42.8,-53C-29,-63.5,-12.9,-70.3,1.9,-72.6C16.7,-74.9,31.3,-67.9,44.1,-57.3Z" transform="translate(100 100)" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+    <section id="about" class="py-20 md:py-28">
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="section-title text-3xl md:text-4xl mb-12 text-center reveal">About Us</h2>
+            <div class="max-w-3xl mx-auto text-center mb-16 reveal">
+                <p class="text-light/80 text-lg">
+                    At BlackDevs Quantum, we're redefining the boundaries of gaming technology. Our team of elite developers creates cutting-edge tools that enhance your gaming experience with unmatched precision and security. With years of expertise and a commitment to innovation, we deliver solutions that keep you ahead of the competition.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+                <div class="stat-card rounded-xl p-6 text-center reveal" style="animation-delay: 0.1s">
+                    <div class="text-gold text-4xl font-bold mb-2 counter" data-target="7">0</div>
+                    <div class="text-teal font-sora font-semibold mb-1">Years</div>
+                    <div class="text-light/60 text-sm">Of Excellence</div>
+                </div>
+                <div class="stat-card rounded-xl p-6 text-center reveal" style="animation-delay: 0.2s">
+                    <div class="text-gold text-4xl font-bold mb-2 counter" data-target="15000">0</div>
+                    <div class="text-teal font-sora font-semibold mb-1">Clients</div>
+                    <div class="text-light/60 text-sm">Worldwide</div>
+                </div>
+                <div class="stat-card rounded-xl p-6 text-center reveal" style="animation-delay: 0.3s">
+                    <div class="text-gold text-4xl font-bold mb-2 counter" data-target="99">0</div>
+                    <div class="text-teal font-sora font-semibold mb-1">Security Rate</div>
+                    <div class="text-light/60 text-sm">Percentage</div>
+                </div>
+                <div class="stat-card rounded-xl p-6 text-center reveal" style="animation-delay: 0.4s">
+                    <div class="text-gold text-4xl font-bold mb-2 counter" data-target="24">0</div>
+                    <div class="text-teal font-sora font-semibold mb-1">Support</div>
+                    <div class="text-light/60 text-sm">Hours Daily</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+    <section id="products" class="py-20 md:py-28 bg-dark/50">
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="section-title text-3xl md:text-4xl mb-12 text-center reveal">Our Products</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+              
+                <div class="product-card rounded-xl overflow-hidden" data-delay="0">
+                    <div class="bg-gradient-to-r from-gold/20 to-teal/20 p-4">
+                        <h3 class="font-sora font-bold text-2xl">Quantum Apex</h3>
+                        <p class="text-light/70">Advanced precision enhancement system</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-8">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIyNSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImEiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIHN0b3AtY29sb3I9IiNmYWNjMTUiIHN0b3Atb3BhY2l0eT0iLjMiIG9mZnNldD0iMCUiLz48c3RvcCBzdG9wLWNvbG9yPSIjMGZmZmMyIiBzdG9wLW9wYWNpdHk9Ii4zIiBvZmZzZXQ9IjEwMCUiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIyNSIgcng9IjgiIGZpbGw9InVybCgjYSkiLz48Y2lyY2xlIGN4PSIyMDAiIGN5PSIxMTIuNSIgcj0iNjAiIGZpbGw9IiMwZmZmYzIiIGZpbGwtb3BhY2l0eT0iLjIiIHN0cm9rZT0iIzBmZmZjMiIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iMjAwIiBjeT0iMTEyLjUiIHI9IjQwIiBmaWxsPSIjZmFjYzE1IiBmaWxsLW9wYWNpdHk9Ii4yIiBzdHJva2U9IiNmYWNjMTUiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjIwMCIgY3k9IjExMi41IiByPSI1IiBmaWxsPSIjZmFjYzE1Ii8+PGxpbmUgeDE9IjEyMCIgeTE9IjYwIiB4Mj0iMjgwIiB5Mj0iMTY1IiBzdHJva2U9IiNmYWNjMTUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNCIvPjxsaW5lIHgxPSIxMjAiIHkxPSIxNjUiIHgyPSIyODAiIHkyPSI2MCIgc3Ryb2tlPSIjMGZmZmMyIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjQiLz48L3N2Zz4=" alt="Quantum Apex" class="w-full rounded-lg">
+                        </div>
+                        
+                        <div class="mb-6">
+                            <div class="accordion-item mb-3">
+                                <div class="flex justify-between items-center cursor-pointer p-3 bg-white/5 rounded-lg">
+                                    <span class="font-sora font-medium">Features</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="accordion-content hidden p-3 text-light/70">
+                                    <ul class="list-disc pl-5 space-y-1">
+                                        <li>Advanced target acquisition</li>
+                                        <li>Recoil compensation system</li>
+                                        <li>Customizable sensitivity profiles</li>
+                                        <li>Real-time performance analytics</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="accordion-item mb-3">
+                                <div class="flex justify-between items-center cursor-pointer p-3 bg-white/5 rounded-lg">
+                                    <span class="font-sora font-medium">Supported Games</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="accordion-content hidden p-3 text-light/70">
+                                    <ul class="grid grid-cols-2 gap-2">
+                                        <li>Apex Legends</li>
+                                        <li>Valorant</li>
+                                        <li>CS:GO</li>
+                                        <li>Fortnite</li>
+                                        <li>Call of Duty</li>
+                                        <li>Overwatch</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                            <div class="bg-white/5 p-3 rounded-lg text-center">
+                                <div class="text-gold font-bold">$9.99</div>
+                                <div class="text-xs text-light/60">Day</div>
+                            </div>
+                            <div class="bg-white/5 p-3 rounded-lg text-center">
+                                <div class="text-gold font-bold">$39.99</div>
+                                <div class="text-xs text-light/60">Week</div>
+                            </div>
+                            <div class="bg-white/5 p-3 rounded-lg text-center">
+                                <div class="text-gold font-bold">$89.99</div>
+                                <div class="text-xs text-light/60">Month</div>
+                            </div>
+                            <div class="bg-white/5 p-3 rounded-lg text-center">
+                                <div class="text-gold font-bold">$199.99</div>
+                                <div class="text-xs text-light/60">Lifetime</div>
+                            </div>
+                        </div>
+                        
+                        <button class="purchase-btn w-full py-3 rounded-lg bg-gradient-to-r from-gold to-gold/80 text-dark font-sora font-semibold transition-all">
+                            Purchase Now
+                        </button>
+                    </div>
+                </div>
+                
+                
+                <div class="product-card rounded-xl overflow-hidden" data-delay="200">
+                    <div class="bg-gradient-to-r from-teal/20 to-gold/20 p-4">
+                        <h3 class="font-sora font-bold text-2xl">Nebula Vision</h3>
+                        <p class="text-light/70">Enhanced visual intelligence system</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-8">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIyNSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImEiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIHN0b3AtY29sb3I9IiMwZmZmYzIiIHN0b3Atb3BhY2l0eT0iLjMiIG9mZnNldD0iMCUiLz48c3RvcCBzdG9wLWNvbG9yPSIjZmFjYzE1IiBzdG9wLW9wYWNpdHk9Ii4zIiBvZmZzZXQ9IjEwMCUiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIyNSIgcng9IjgiIGZpbGw9InVybCgjYSkiLz48cGF0aCBkPSJNMjAwIDYwIEwxMjAgMTQwIEwyMDAgMTgwIEwyODAgMTQwIFoiIGZpbGw9IiMwZmZmYzIiIGZpbGwtb3BhY2l0eT0iLjIiIHN0cm9rZT0iIzBmZmZjMiIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iMjAwIiBjeT0iMTEyLjUiIHI9IjIwIiBmaWxsPSIjZmFjYzE1IiBmaWxsLW9wYWNpdHk9Ii4yIiBzdHJva2U9IiNmYWNjMTUiIHN0cm9rZS13aWR0aD0iMiIvPjxsaW5lIHgxPSIxNTAiIHkxPSI4MCIgeDI9IjI1MCIgeTI9IjgwIiBzdHJva2U9IiNmYWNjMTUiIHN0cm9rZS13aWR0aD0iMiIvPjxsaW5lIHgxPSIxNTAiIHkxPSIxNDUiIHgyPSIyNTAiIHkyPSIxNDUiIHN0cm9rZT0iIzBmZmZjMiIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iODAiIHI9IjUiIGZpbGw9IiNmYWNjMTUiLz48Y2lyY2xlIGN4PSIyNTAiIGN5PSI4MCIgcj0iNSIgZmlsbD0iI2ZhY2MxNSIvPjxjaXJjbGUgY3g9IjE1MCIgY3k9IjE0NSIgcj0iNSIgZmlsbD0iIzBmZmZjMiIvPjxjaXJjbGUgY3g9IjI1MCIgY3k9IjE0NSIgcj0iNSIgZmlsbD0iIzBmZmZjMiIvPjwvc3ZnPg==" alt="Nebula Vision" class="w-full rounded-lg">
+                        </div>
+                        
+                        <div class="mb-6">
+                            <div class="accordion-item mb-3">
+                                <div class="flex justify-between items-center cursor-pointer p-3 bg-white/5 rounded-lg">
+                                    <span class="font-sora font-medium">Features</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="accordion-content hidden p-3 text-light/70">
+                                    <ul class="list-disc pl-5 space-y-1">
+                                        <li>Enhanced player visibility</li>
+                                        <li>Threat detection system</li>
+                                        <li>Customizable visual filters</li>
+                                        <li>Night vision mode</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="accordion-item mb-3">
+                                <div class="flex justify-between items-center cursor-pointer p-3 bg-white/5 rounded-lg">
+                                    <span class="font-sora font-medium">Supported Games</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="accordion-content hidden p-3 text-light/70">
+                                    <ul class="grid grid-cols-2 gap-2">
+                                        <li>PUBG</li>
+                                        <li>Rainbow Six</li>
+                                        <li>Escape from Tarkov</li>
+                                        <li>Battlefield</li>
+                                        <li>Warzone</li>
+                                        <li>Destiny 2</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                            <div class="bg-white/5 p-3 rounded-lg text-center">
+                                <div class="text-gold font-bold">$12.99</div>
+                                <div class="text-xs text-light/60">Day</div>
+                            </div>
+                            <div class="bg-white/5 p-3 rounded-lg text-center">
+                                <div class="text-gold font-bold">$49.99</div>
+                                <div class="text-xs text-light/60">Week</div>
+                            </div>
+                            <div class="bg-white/5 p-3 rounded-lg text-center">
+                                <div class="text-gold font-bold">$99.99</div>
+                                <div class="text-xs text-light/60">Month</div>
+                            </div>
+                            <div class="bg-white/5 p-3 rounded-lg text-center">
+                                <div class="text-gold font-bold">$249.99</div>
+                                <div class="text-xs text-light/60">Lifetime</div>
+                            </div>
+                        </div>
+                        
+                        <button class="purchase-btn w-full py-3 rounded-lg bg-gradient-to-r from-teal to-teal/80 text-dark font-sora font-semibold transition-all">
+                            Purchase Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+  
+    <section id="status" class="py-20 md:py-28">
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="section-title text-3xl md:text-4xl mb-12 text-center reveal">Product Status</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="status-card rounded-xl p-5 reveal-left" style="animation-delay: 0.1s">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-sora font-semibold">Quantum Apex</h3>
+                        <span class="badge badge-undetected text-xs px-3 py-1 rounded-full">Undetected</span>
+                    </div>
+                    <p class="text-light/60 text-sm">Last updated: 2 hours ago</p>
+                </div>
+                <div class="status-card rounded-xl p-5 reveal" style="animation-delay: 0.2s">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-sora font-semibold">Nebula Vision</h3>
+                        <span class="badge badge-undetected text-xs px-3 py-1 rounded-full">Undetected</span>
+                    </div>
+                    <p class="text-light/60 text-sm">Last updated: 6 hours ago</p>
+                </div>
+                <div class="status-card rounded-xl p-5 reveal-right" style="animation-delay: 0.3s">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-sora font-semibold">Stealth Protocol</h3>
+                        <span class="badge badge-updating text-xs px-3 py-1 rounded-full">Updating</span>
+                    </div>
+                    <p class="text-light/60 text-sm">Last updated: 1 day ago</p>
+                </div>
+                <div class="status-card rounded-xl p-5 reveal-left" style="animation-delay: 0.4s">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-sora font-semibold">Velocity Engine</h3>
+                        <span class="badge badge-undetected text-xs px-3 py-1 rounded-full">Undetected</span>
+                    </div>
+                    <p class="text-light/60 text-sm">Last updated: 12 hours ago</p>
+                </div>
+                <div class="status-card rounded-xl p-5 reveal" style="animation-delay: 0.5s">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-sora font-semibold">Phantom Assist</h3>
+                        <span class="badge badge-updating text-xs px-3 py-1 rounded-full">Updating</span>
+                    </div>
+                    <p class="text-light/60 text-sm">Last updated: 2 days ago</p>
+                </div>
+                <div class="status-card rounded-xl p-5 reveal-right" style="animation-delay: 0.6s">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-sora font-semibold">Orbital Scanner</h3>
+                        <span class="badge badge-undetected text-xs px-3 py-1 rounded-full">Undetected</span>
+                    </div>
+                    <p class="text-light/60 text-sm">Last updated: 5 hours ago</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+    <section id="faq" class="py-20 md:py-28 bg-dark/50">
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="section-title text-3xl md:text-4xl mb-12 text-center reveal">Frequently Asked Questions</h2>
+            <div class="max-w-3xl mx-auto space-y-4">
+                <div class="faq-item rounded-xl overflow-hidden reveal" style="animation-delay: 0.1s">
+                    <div class="faq-header flex justify-between items-center p-5 cursor-pointer">
+                        <h3 class="font-sora font-medium text-lg">How do I install your products?</h3>
+                        <span class="accordion-icon text-teal">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="faq-content px-5 pb-5">
+                        <p class="text-light/70">
+                            After purchase, you'll receive a download link and detailed installation instructions via email. Our launcher makes the process simple - just run the installer, log in with your account credentials, and follow the on-screen instructions. If you encounter any issues, our 24/7 support team is available to assist you.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="faq-item rounded-xl overflow-hidden reveal" style="animation-delay: 0.2s">
+                    <div class="faq-header flex justify-between items-center p-5 cursor-pointer">
+                        <h3 class="font-sora font-medium text-lg">Are your products safe to use?</h3>
+                        <span class="accordion-icon text-teal">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="faq-content px-5 pb-5">
+                        <p class="text-light/70">
+                            Yes, we prioritize security above all else. Our products use advanced encryption and protection methods to ensure they remain undetected. We constantly update our software to stay ahead of anti-cheat systems, and our status page provides real-time information about detection risks. Our 99% security rate is a testament to our commitment to keeping your accounts safe.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="faq-item rounded-xl overflow-hidden reveal" style="animation-delay: 0.3s">
+                    <div class="faq-header flex justify-between items-center p-5 cursor-pointer">
+                        <h3 class="font-sora font-medium text-lg">What payment methods do you accept?</h3>
+                        <span class="accordion-icon text-teal">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="faq-content px-5 pb-5">
+                        <p class="text-light/70">
+                            We accept a variety of payment methods including major credit cards, PayPal, and cryptocurrency (Bitcoin, Ethereum, and Litecoin). Cryptocurrency payments offer an additional layer of privacy and come with a 5% discount on all purchases.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="faq-item rounded-xl overflow-hidden reveal" style="animation-delay: 0.4s">
+                    <div class="faq-header flex justify-between items-center p-5 cursor-pointer">
+                        <h3 class="font-sora font-medium text-lg">Do you offer refunds?</h3>
+                        <span class="accordion-icon text-teal">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="faq-content px-5 pb-5">
+                        <p class="text-light/70">
+                            We offer a 24-hour money-back guarantee if our product doesn't work as described. However, refunds are not available if a product becomes detected after purchase, as this is beyond our control. We recommend checking our status page regularly for the most up-to-date information on our products.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="faq-item rounded-xl overflow-hidden reveal" style="animation-delay: 0.5s">
+                    <div class="faq-header flex justify-between items-center p-5 cursor-pointer">
+                        <h3 class="font-sora font-medium text-lg">How often do you update your products?</h3>
+                        <span class="accordion-icon text-teal">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="faq-content px-5 pb-5">
+                        <p class="text-light/70">
+                            We update our products regularly to ensure optimal performance and security. Major updates typically occur weekly, with minor patches and security updates released as needed. Lifetime subscribers receive all updates for free, while subscription-based users get updates for the duration of their subscription period.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+    <footer class="py-12">
+        <div class="footer-border mb-12"></div>
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <a href="#hero" class="text-xl font-bold font-sora text-gold mb-4 block">
+                        BLACKDEVS<span class="text-teal">QUANTUM</span>
+                    </a>
+                    <div class="text-light/60 text-sm">
+                        © 2023 BlackDevs Quantum. All rights reserved.
+                    </div>
+                </div>
+                
+                <div class="mb-6 md:mb-0 flex flex-col items-center">
+                    <div class="text-teal font-sora text-sm mb-2">REDEFINING POSSIBILITIES</div>
+                    <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8">
+                        <circle cx="25" cy="25" r="20" fill="none" stroke="#0fffc2" stroke-width="1.5" />
+                        <circle cx="25" cy="25" r="10" fill="none" stroke="#facc15" stroke-width="1.5" />
+                        <circle cx="25" cy="25" r="3" fill="#facc15" />
+                    </svg>
+                </div>
+                
+                <div class="flex space-x-6">
+                    <a href="#" class="social-icon text-light hover:text-gold">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon text-light hover:text-gold">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon text-light hover:text-gold">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon text-light hover:text-gold">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon text-light hover:text-gold">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19.54 0c1.356 0 2.46 1.104 2.46 2.472v21.528l-2.58-2.28-1.452-1.344-1.536-1.428.636 2.22h-13.608c-1.356 0-2.46-1.104-2.46-2.472v-16.224c0-1.368 1.104-2.472 2.46-2.472h16.08zm-4.632 15.672c2.652-.084 3.672-1.824 3.672-1.824 0-3.864-1.728-6.996-1.728-6.996-1.728-1.296-3.372-1.26-3.372-1.26l-.168.192c2.04.624 2.988 1.524 2.988 1.524-1.248-.684-2.472-1.02-3.612-1.152-.864-.096-1.692-.072-2.424.024l-.204.024c-.42.036-1.44.192-2.724.756-.444.204-.708.348-.708.348s.996-.948 3.156-1.572l-.12-.144s-1.644-.036-3.372 1.26c0 0-1.728 3.132-1.728 6.996 0 0 1.008 1.74 3.66 1.824 0 0 .444-.54.804-.996-1.524-.456-2.1-1.416-2.1-1.416l.336.204.048.036.047.027.014.006.047.027c.3.168.6.3.876.408.492.192 1.08.384 1.764.516.9.168 1.956.228 3.108.012.564-.096 1.14-.264 1.74-.516.42-.156.888-.384 1.38-.708 0 0-.6.984-2.172 1.428.36.456.792.972.792.972zm-5.58-5.604c-.684 0-1.224.6-1.224 1.332 0 .732.552 1.332 1.224 1.332.684 0 1.224-.6 1.224-1.332.012-.732-.54-1.332-1.224-1.332zm4.38 0c-.684 0-1.224.6-1.224 1.332 0 .732.552 1.332 1.224 1.332.684 0 1.224-.6 1.224-1.332 0-.732-.54-1.332-1.224-1.332z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-white/10 text-center text-light/60 text-xs">
+                <a href="#" class="hover:text-teal mx-3">Terms of Service</a>
+                <a href="#" class="hover:text-teal mx-3">Privacy Policy</a>
+                <a href="#" class="hover:text-teal mx-3">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+     
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+       
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-dark/90');
+                navbar.classList.remove('bg-transparent');
+            } else {
+                navbar.classList.remove('bg-dark/90');
+                navbar.classList.add('bg-transparent');
+            }
+        });
+        
+       
+        function reveal() {
+            const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+            
+            for (let i = 0; i < reveals.length; i++) {
+                const windowHeight = window.innerHeight;
+                const elementTop = reveals[i].getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add('active');
+                }
+            }
+        }
+        
+        window.addEventListener('scroll', reveal);
+        reveal(); 
+        
+       
+        function animateProductCards() {
+            const cards = document.querySelectorAll('.product-card');
+            
+            cards.forEach(card => {
+                const delay = card.getAttribute('data-delay') || 0;
+                setTimeout(() => {
+                    card.classList.add('visible');
+                }, delay);
+            });
+        }
+        
+     
+        function animateCounters() {
+            const counters = document.querySelectorAll('.counter');
+            const speed = 200;
+            
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                const increment = target / speed;
+                
+                const updateCount = () => {
+                    const count = +counter.innerText;
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + increment);
+                        setTimeout(updateCount, 1);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                
+                updateCount();
+            });
+        }
+        
+       
+        const faqHeaders = document.querySelectorAll('.faq-header');
+        
+        faqHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const faqItem = header.parentElement;
+                faqItem.classList.toggle('active');
+            });
+        });
+        
+      
+        const accordionItems = document.querySelectorAll('.accordion-item');
+        
+        accordionItems.forEach(item => {
+            const header = item.querySelector('div:first-child');
+            const content = item.querySelector('.accordion-content');
+            
+            header.addEventListener('click', () => {
+                content.classList.toggle('hidden');
+            });
+        });
+        
+       
+        window.addEventListener('load', () => {
+            animateProductCards();
+            setTimeout(animateCounters, 500);
+        });
+        
+       
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+               
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'948ab0a5561ac1cd',t:'MTc0ODczODc0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
